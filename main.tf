@@ -16,7 +16,7 @@ provider "aws" {
 }
 
 
-# VPC
+# Create VPC
 resource "aws_vpc" "main" {
   cidr_block       = "10.10.0.0/16"
   tags = {
@@ -30,7 +30,7 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
-#subnet public
+#Create subnet public
 resource "aws_subnet" "public" {
  vpc_id = aws_vpc.main.id
  cidr_block = "10.10.1.0/24"
@@ -39,7 +39,7 @@ resource "aws_subnet" "public" {
  }
 }
 
-#subnet private
+#Create subnet private
 
 resource "aws_subnet" "private" {
  vpc_id = aws_vpc.main.id
@@ -71,7 +71,7 @@ resource "aws_subnet" "private" {
 
 
 
-#Internet Gateway 
+#Create Internet Gateway 
 
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
@@ -82,7 +82,7 @@ resource "aws_internet_gateway" "gw" {
 
 }
 
-# Route Table Public and association
+# Route Table Public and association (untuk nyambungin Internet Gateway ke Subnet Private)
 
 resource "aws_route_table" "publicroute" {
   vpc_id = aws_vpc.main.id
@@ -99,7 +99,7 @@ resource "aws_route_table_association" "publicroute" {
 }
 
 
-#NAT GATEWAY
+# Create NAT GATEWAY
 resource "aws_eip" "nat_gateway" {
   vpc = true
 }
@@ -132,7 +132,7 @@ resource "aws_route_table_association" "privateroute" {
 }
 
 
-#Security Group
+# Create Security Group
 
 resource "aws_security_group" "public" {
     
@@ -378,7 +378,7 @@ resource "aws_security_group" "monitoring" {
 
 
 
-# Instance Public
+# Create Instance Public
 resource "aws_instance" "public" {
   ami               = "ami-00ddb0e5626798373"
   instance_type     = "t2.medium"
@@ -403,7 +403,7 @@ resource "aws_eip" "lb" {
    instance = aws_instance.public.id
 }
 
-# Instance Frontend
+# Create Instance Frontend
 resource "aws_instance" "frontend" {
   ami               = "ami-00ddb0e5626798373"
   instance_type     = "t2.small"
@@ -425,7 +425,7 @@ resource "aws_instance" "frontend" {
   }
 }
 
-# Instance Backend
+# Create Instance Backend
 resource "aws_instance" "Backend" {
   ami               = "ami-00ddb0e5626798373"
   instance_type     = "t2.small"
@@ -446,7 +446,7 @@ resource "aws_instance" "Backend" {
 #    volume_type           = "gp2"
   }
 }
-# Instance Jenkins
+# Create Instance Jenkins
 resource "aws_instance" "jenkins" {
   ami               = "ami-00ddb0e5626798373"
   instance_type     = "t2.medium"
@@ -468,7 +468,7 @@ resource "aws_instance" "jenkins" {
   }
 }
 
-# Instance Database
+# Create Instance Database
 resource "aws_instance" "database" {
   ami               = "ami-00ddb0e5626798373"
   instance_type     = "t2.medium"
@@ -491,7 +491,7 @@ resource "aws_instance" "database" {
 }
 
 
-# Instance Monitoring
+# Create Instance Monitoring
 resource "aws_instance" "monitoring" {
   ami               = "ami-00ddb0e5626798373"
   instance_type     = "t2.small"
